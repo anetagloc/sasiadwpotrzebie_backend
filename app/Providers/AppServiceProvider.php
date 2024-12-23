@@ -2,7 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\Rating;
 use Illuminate\Http\Request;
+use App\Policies\RatingPolicy;
+use Illuminate\Support\Facades\Gate;
 use App\Services\UserMatchingService;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Cache\RateLimiting\Limit;
@@ -26,5 +29,7 @@ class AppServiceProvider extends ServiceProvider
         RateLimiter::for('api', function (Request $request) {
             return Limit::perMinute(60)->by(optional($request->user())->id ?: $request->ip());
         });
+
+        Gate::policy(Rating::class, RatingPolicy::class);
     }
 }
